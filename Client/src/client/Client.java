@@ -43,8 +43,8 @@ public class Client {
         
         while(!exit)
         {
-            System.out.println("Menu fodace");
-            System.out.println("Wyd?");
+            System.out.println("Bem-vindo(a) ao Cliente Rest!");
+            System.out.println("O que deseja fazer?");
             System.out.println("1 - Consultar Alunos");
             System.out.println("2 - Consultar Aluno por RA");
             System.out.println("3 - Consultar Aluno por Nome");
@@ -53,6 +53,7 @@ public class Client {
             System.out.println("6 - Excluir Aluno");
             System.out.println("7 - Exit");
             System.out.println("");
+            System.out.print("Escolha: ");
             try{
                 String resp = leitor.readLine();
                 
@@ -95,18 +96,43 @@ public class Client {
                         }
                         else
                         {
-                            System.out.println("errou o nome");
+                            System.out.println("Nome vazio não é válido!");
                         }  
                         break;
                     }
                         
                     case "4":{
-                        
-                        
-                        break;
+                        System.out.print("Digite o RA: ");
+                        String RA = leitor.readLine();
+                        System.out.println("");
+                        System.out.print("Digite o Nome: ");
+                        String nome = leitor.readLine();
+                        System.out.println("");
+                        System.out.print("Digite o Email: ");
+                        String email = leitor.readLine();
+                        System.out.println("");
+                        Aluno a = new Aluno(RA, nome, email);
+                        String alunoJson = gson.toJson(a);
+                        clienteRest.incluiAluno(urlIncluirAluno, alunoJson);
+                        System.out.println("O aluno " + nome + "foi incluído!");
+                       break;
                     }
                         
                     case "5":{
+                        System.out.print("Digite o RA do aluno a ser alterado: ");
+                        String RA = leitor.readLine();
+                        System.out.println("");
+                        System.out.print("Digite o Nome novo: ");
+                        String nome = leitor.readLine();
+                        System.out.println("");
+                        System.out.print("Digite o Email novo: ");
+                        String email = leitor.readLine();
+                        System.out.println("");
+                        Aluno a = new Aluno(RA, nome, email);
+                        String alunoJson = gson.toJson(a);
+                        clienteRest.alteraAluno(urlAlterarAluno, alunoJson);
+                        System.out.println("O aluno " + nome + " foi alterado."
+                                + "!");
                        break;
                     }
                         
@@ -130,7 +156,7 @@ public class Client {
                         
                     case "7": exit = true; break;
                 }
-                
+                System.out.println("Pressione [ENTER] para continuar...");
                 leitor.readLine();
             }
             catch(Exception e)
@@ -251,8 +277,7 @@ public class Client {
         con.setRequestProperty("Content-Type", "application/json");
         
         //Formata em json o item da lista a ser inserido com POST
-        //String output = 
-        // "{\"curso\":\"Artes Plástica Litorânea\",\"id\":6,\"nome\":\"Bianca\"}";
+        
         
         System.out.println("\nEnviando requisição 'POST' para URL: " + url);
         
@@ -282,7 +307,7 @@ public class Client {
         return response.toString();
     }
     
-    public String alteraAluno(String url) throws MalformedURLException, IOException{
+    public String alteraAluno(String url, String output) throws MalformedURLException, IOException{
         
         URL objURL = new URL(url);
         HttpURLConnection con = (HttpURLConnection)objURL.openConnection();
@@ -292,9 +317,7 @@ public class Client {
         con.setRequestMethod("PUT");
         con.setRequestProperty("Content-Type", "application/json");
         
-        //Formata em json o item da lista a ser inserido com POST
-        String output = "{\"curso\":\"Eletroeletronica\",\"id\":2,\"nome\":\"Prato\"}";
-         
+       
         
         System.out.println("\nEnviando requisição 'POST' para URL: " + url);
         
