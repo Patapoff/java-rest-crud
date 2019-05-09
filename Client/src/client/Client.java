@@ -86,10 +86,12 @@ public class Client {
                     }
                     
                     case "3":{
-                        System.out.print("Irmao digita o nome: ");
+                        System.out.print("Digite o nome: ");
                         String Nome = leitor.readLine();
                         if (NomeisValid(Nome))
                         {
+                            Nome = Nome.replace(" ", "%20");
+                            // troca os espaços por %20 para que a URL funcione
                             String consultaAlunoNome =
                             clienteRest.consultaAlunoNome(urlConsultaAlunoNome+Nome);
                             Aluno a =(Aluno) gson.fromJson(consultaAlunoNome, Aluno.class);
@@ -97,18 +99,29 @@ public class Client {
                         }
                         else
                         {
-                            System.out.println("Nome vazio não é válido!");
+                            System.out.println("Este nome não é válido!");
                         }  
                         break;
                     }
                         
                     case "4":{
-                        System.out.print("Digite o RA: ");
-                        String RA = leitor.readLine();
+                        
+                        String RA = "";
+                        do {
+                            System.out.print("Digite o RA: ");
+                            RA = leitor.readLine();
+                        } while (!RAisValid(RA));
+                        
                         System.out.println("");
-                        System.out.print("Digite o Nome: ");
-                        String nome = leitor.readLine();
+                        
+                        String nome = "";
+                        do {
+                            System.out.print("Digite o Nome: ");
+                            nome = leitor.readLine();
+                        } while (!NomeisValid(nome));
+                        
                         System.out.println("");
+                        
                         System.out.print("Digite o Email: ");
                         String email = leitor.readLine();
                         System.out.println("");
@@ -122,12 +135,22 @@ public class Client {
                     }
                         
                     case "5":{
-                        System.out.print("Digite o RA do aluno a ser alterado: ");
-                        String RA = leitor.readLine();
+                        String RA = "";
+                        do {
+                            System.out.print("Digite o RA do aluno a ser alterado: ");
+                            RA = leitor.readLine();
+                        } while (!RAisValid(RA));
+                        
                         System.out.println("");
-                        System.out.print("Digite o Nome novo: ");
-                        String nome = leitor.readLine();
+                        
+                        String nome = "";
+                        do {
+                            System.out.print("Digite o Nome novo: ");
+                            nome = leitor.readLine();
+                        } while (!NomeisValid(nome));
+                        
                         System.out.println("");
+                        
                         System.out.print("Digite o Email novo: ");
                         String email = leitor.readLine();
                         System.out.println("");
@@ -159,6 +182,10 @@ public class Client {
                     }
                         
                     case "7": exit = true; break;
+                    
+                    default:
+                        System.out.println("Escolha uma opção válida!");
+                        break;
                 }
                 System.out.println("Pressione [ENTER] para continuar...");
                 leitor.readLine();
@@ -364,8 +391,10 @@ public class Client {
     
     static public boolean NomeisValid(String Nome)
     {
-        
         if (Nome.isEmpty())
+            return false;
+        
+        if (!Nome.matches("^[a-zA-Z ]*$"))
             return false;
         
         return true;
