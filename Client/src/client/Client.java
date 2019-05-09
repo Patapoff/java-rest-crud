@@ -62,30 +62,31 @@ public class Client {
                     case "1": {
                         String consultaTudoAluno =
                             clienteRest.consultaAluno(urlConsultaAluno);
-                        System.out.println(consultaTudoAluno);
+                        ArrayList<Aluno> a = (ArrayList<Aluno>) gson.fromJson(consultaTudoAluno, new TypeToken<List<Aluno>>(){}.getType());
+                        System.out.println(a);
                         break;
                     }
                     
                     case "2": {
-                        System.out.println("Irmao digita o ra: ");
+                        System.out.print("Digite o ra: ");
                         String RA = leitor.readLine();
                         if (RAisValid(RA))
                         {
                             String consultaAlunoRA =
                             clienteRest.consultaAlunoRA(urlConsultaAlunoRA+RA);
-                            Aluno a =(Aluno) gson.fromJson(consultaAlunoRA, Aluno.class);
+                            Aluno a =(Aluno)gson.fromJson(consultaAlunoRA, Aluno.class);
                             System.out.println(a);
 
                         }
                         else
                         {
-                            System.out.println("errou o ra");
+                            System.out.println("RA inválido.");
                         }  
                         break;
                     }
                     
                     case "3":{
-                        System.out.println("Irmao digita o nome: ");
+                        System.out.print("Irmao digita o nome: ");
                         String Nome = leitor.readLine();
                         if (NomeisValid(Nome))
                         {
@@ -111,9 +112,11 @@ public class Client {
                         System.out.print("Digite o Email: ");
                         String email = leitor.readLine();
                         System.out.println("");
+                        
                         Aluno a = new Aluno(RA, nome, email);
                         String alunoJson = gson.toJson(a);
                         clienteRest.incluiAluno(urlIncluirAluno, alunoJson);
+                        
                         System.out.println("O aluno " + nome + "foi incluído!");
                        break;
                     }
@@ -128,28 +131,29 @@ public class Client {
                         System.out.print("Digite o Email novo: ");
                         String email = leitor.readLine();
                         System.out.println("");
+                        
                         Aluno a = new Aluno(RA, nome, email);
                         String alunoJson = gson.toJson(a);
                         clienteRest.alteraAluno(urlAlterarAluno, alunoJson);
+                        
                         System.out.println("O aluno " + nome + " foi alterado."
                                 + "!");
                        break;
                     }
                         
                     case "6":{
-                        System.out.println("Irmao digita o ra a ser excluido: ");
+                        System.out.print("Digite o RA do aluno a ser excluído:");
                         String RA = leitor.readLine();
                         if (RAisValid(RA))
                         {
                             String ExcluiAluno =
                             clienteRest.consultaAlunoRA(urlExcluirAluno+RA);
-                            ArrayList<Aluno> a = (ArrayList<Aluno>) gson.fromJson(ExcluiAluno, new TypeToken<List<Aluno>>(){}.getType());
-                            System.out.println(a);
-
+                            
+                            System.out.println("Aluno excluído com sucesso.");
                         }
                         else
                         {
-                            System.out.println("errou o ra");
+                            System.out.println("RA inválido.");
                         }  
                         break;
                     }
@@ -362,8 +366,6 @@ public class Client {
     {
         
         if (Nome.isEmpty())
-            return false;
-        if (!Nome.matches("^[a-zA-Z]*$"))
             return false;
         
         return true;
